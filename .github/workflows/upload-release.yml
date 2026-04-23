@@ -9,7 +9,8 @@ on:
 jobs:
   build-and-release:
     runs-on: windows-latest
-
+    permissions:
+      contents: write
     steps:
       - name: 取出代码
         uses: actions/checkout@v4
@@ -50,12 +51,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          body: |
-            ## 更新内容
-            - 见提交历史
-
-            ## 运行说明
-            - 解压 `debit.zip`，运行 `debit.exe`（无需安装 .NET）
+          body: 见提交历史
           files: ./debit.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
