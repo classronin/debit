@@ -3,8 +3,8 @@ name: 构建并发布 Release
 on:
   push:
     tags:
-      - 'v*'               # 推送 v 开头的标签时触发
-  workflow_dispatch:        # 支持手动触发
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build-and-release:
@@ -23,16 +23,16 @@ jobs:
         run: dotnet restore
 
       - name: 发布自包含单文件
-        run: >
-          dotnet publish -c Release -r win-x64
-          --self-contained true
-          -p:PublishSingleFile=true
-          -p:Version=${{ github.ref_name }}
-          -p:FileVersion=${{ github.ref_name }}
-          -p:Product=debit
-          -p:Company=classronin
-          -p:Copyright=Copyright © ${{ github.event.repository.owner.login }}
-          -o ./publish
+        run: |
+          dotnet publish -c Release -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:Version=${{ github.ref_name }} `
+            -p:FileVersion=${{ github.ref_name }} `
+            -p:Product=debit `
+            -p:Company=classronin `
+            -p:Copyright="Copyright (c) ${{ github.event.repository.owner.login }}" `
+            -o ./publish
 
       - name: 打包为 ZIP（包含必要 DLL）
         run: |
