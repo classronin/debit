@@ -7,7 +7,7 @@ debit 是一个轻量级的文本算式编辑器，无需切换到计算器。
 
 
 
-![截图](https://github.com/classronin/picx-images-hosting/raw/master/python_kq3PQWSUxN.3yf1pl0r0h.gif)
+![截图](https://github.com/classronin/picx-images-hosting/raw/master/debit_kb86ZuUkyo.lwbxx3hp5.gif)
 
 
 下载Windows便捷版 [debit.zip](https://github.com/classronin/debit/releases/latest/download/debit.zip)
