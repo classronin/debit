@@ -19,6 +19,13 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: 设置版本号（去掉 v 前缀）
+        id: version
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
       - name: 还原依赖
         run: dotnet restore
 
@@ -27,14 +34,14 @@ jobs:
           dotnet publish -c Release -r win-x64 `
             --self-contained true `
             -p:PublishSingleFile=true `
-            -p:Version=${{ github.ref_name }} `
-            -p:FileVersion=${{ github.ref_name }} `
+            -p:Version=${{ steps.version.outputs.VERSION }} `
+            -p:FileVersion=${{ steps.version.outputs.VERSION }} `
             -p:Product=debit `
             -p:Company=classronin `
-            -p:Copyright="Copyright (c) ${{ github.event.repository.owner.login }}" `
+            -p:Copyright="Copyright (c) classronin" `
             -o ./publish
 
-      - name: 打包为 ZIP（包含必要 DLL）
+      - name: 打包为 ZIP
         run: |
           Compress-Archive -Path ./publish/* -DestinationPath ./debit.zip
 
