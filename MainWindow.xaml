@@ -1,0 +1,59 @@
+<Window x:Class="debit_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="debit - 文本算式" Height="600" Width="800"
+        Closing="Window_Closing"
+        KeyDown="Window_KeyDown"
+        PreviewMouseWheel="Window_PreviewMouseWheel">
+	<Window.InputBindings>
+		<KeyBinding Key="W" Modifiers="Control" Command="ApplicationCommands.Close" />
+		<KeyBinding Key="S" Modifiers="Control" Command="ApplicationCommands.Save" />
+	</Window.InputBindings>
+	<Window.CommandBindings>
+		<CommandBinding Command="ApplicationCommands.Close" Executed="CtrlW_Executed" />
+		<CommandBinding Command="ApplicationCommands.Save" Executed="CtrlS_Executed" />
+	</Window.CommandBindings>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Menu Grid.Row="0">
+			<MenuItem Header="文件(_F)">
+				<MenuItem Header="新建(_N)" Click="NewFile_Click"/>
+				<MenuItem Header="打开(_O)" Click="OpenFile_Click"/>
+				<MenuItem Header="保存(_S)" InputGestureText="Ctrl+S" Click="SaveFile_Click"/>
+				<MenuItem Header="另存为(_A)" Click="SaveAsFile_Click"/>
+				<Separator/>
+				<MenuItem Header="关闭标签(_C)" InputGestureText="Ctrl+W" Click="CloseTab_Click"/>
+				<Separator/>
+				<MenuItem Header="退出(_X)" Click="Exit_Click"/>
+			</MenuItem>
+			<MenuItem Header="设置(_S)">
+				<MenuItem Header="放大(_I)" InputGestureText="Ctrl++" Click="ZoomIn_Click"/>
+				<MenuItem Header="缩小(_O)" InputGestureText="Ctrl+-" Click="ZoomOut_Click"/>
+				<MenuItem Header="主题" x:Name="ThemeMenuItem">
+					<MenuItem Header="浅色" IsCheckable="True" x:Name="LightThemeItem" Click="LightTheme_Click"/>
+					<MenuItem Header="深色" IsCheckable="True" x:Name="DarkThemeItem" Click="DarkTheme_Click"/>
+				</MenuItem>
+			</MenuItem>
+		</Menu>
+
+		<!-- 动态布局区域 -->
+		<Grid x:Name="LayoutRoot" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+			<!-- 代码中动态填充 EditorPanel 和 GridSplitter -->
+		</Grid>
+
+		<StatusBar Grid.Row="2">
+			<StatusBarItem>
+				<TextBlock x:Name="statusText" Text="就绪"/>
+			</StatusBarItem>
+			<StatusBarItem HorizontalAlignment="Right">
+				<TextBlock x:Name="zoomStatusText" Text="字体: 12pt"/>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
+</Window>
