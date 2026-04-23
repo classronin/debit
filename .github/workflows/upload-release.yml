@@ -1,0 +1,54 @@
+name: 构建并发布 Release
+
+on:
+  push:
+    tags:
+      - 'v*'               # 推送 v 开头的标签时触发
+  workflow_dispatch:        # 支持手动触发
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: 取出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 .NET SDK 8.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 还原依赖
+        run: dotnet restore
+
+      - name: 发布自包含单文件
+        run: >
+          dotnet publish -c Release -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:Version=${{ github.ref_name }}
+          -p:FileVersion=${{ github.ref_name }}
+          -p:Product=debit
+          -p:Company=classronin
+          -p:Copyright=Copyright © ${{ github.event.repository.owner.login }}
+          -o ./publish
+
+      - name: 打包为 ZIP（包含必要 DLL）
+        run: |
+          Compress-Archive -Path ./publish/* -DestinationPath ./debit.zip
+
+      - name: 创建 Release 并上传资产
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## 更新内容
+            - 见提交历史
+
+            ## 运行说明
+            - 解压 `debit.zip`，运行 `debit.exe`（无需安装 .NET）
+          files: ./debit.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
